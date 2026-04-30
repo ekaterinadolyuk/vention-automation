@@ -7,24 +7,24 @@ test.beforeEach(async ({page}) => {
 
 test.describe('First UI tests', () => {
   test('Main page has title "PW-test"', async ({ page }) => {
-    const titleLocator = page.getByText('PW-test') 
+    const titleLocator = page.locator('nb-layout-header .logo-container') 
     await expect(titleLocator).toHaveText('PW-test');
   });
 
   test('Disable all content dashboard tabs', async ({ page }) => {
-    const firstDashboardTab = page.locator('[ng-reflect-title="Light"] nb-card')
-    const secondDashboardTab = page.locator('[ng-reflect-title="Roller Shades"] nb-card')
-    const thirdDashboardTab = page.locator('[ng-reflect-title="Wireless Audio"] nb-card')
-    const fourthDashboardTab = page.locator('[ng-reflect-title="Coffee Maker"] nb-card')
-    await firstDashboardTab.click()
-    await secondDashboardTab.click()
-    await thirdDashboardTab.click()
-    await fourthDashboardTab.click()
+    const lightDashboardTab = page.locator('[ng-reflect-title="Light"] nb-card')
+    const rollerShadesDashboardTab = page.locator('[ng-reflect-title="Roller Shades"] nb-card')
+    const wirelessAudioDashboardTab = page.locator('[ng-reflect-title="Wireless Audio"] nb-card')
+    const coffeeMakerDashboardTab = page.locator('[ng-reflect-title="Coffee Maker"] nb-card')
+    await lightDashboardTab.click()
+    await rollerShadesDashboardTab.click()
+    await wirelessAudioDashboardTab.click()
+    await coffeeMakerDashboardTab.click()
 
-    await expect(firstDashboardTab).toHaveClass(/off/)
-    await expect(secondDashboardTab).toHaveClass(/off/)
-    await expect(thirdDashboardTab).toHaveClass(/off/)
-    await expect(fourthDashboardTab).toHaveClass(/off/)
+    await expect(lightDashboardTab).toHaveClass("off")
+    await expect(rollerShadesDashboardTab).toHaveClass("off")
+    await expect(wirelessAudioDashboardTab).toHaveClass("off")
+    await expect(coffeeMakerDashboardTab).toHaveClass("off")
   });
 
   test('Change light mode to dark one', async ({page}) => {
@@ -53,12 +53,13 @@ test.describe('First UI tests', () => {
     await expect(page.locator('nb-search-field')).toHaveAttribute('ng-reflect-show', 'false')
   })
 
-  test('GitHub link leads to GitHub page', async ({page}) => {
+  test('GitHub link leads to GitHub page', async ({page, context}) => {
     const gitHubIcon = page.locator('a.ion-social-github')
     await gitHubIcon.click()
+    const gitHubPage = await context.waitForEvent('page')
 
     // should be failed as per current implementation href="#"
-    await expect(page).toHaveURL('https://github.com/')
+    await expect(gitHubPage).toHaveURL('https://github.com/')
   })
 
   test('Humidity tab has active state', async ({page}) => {
